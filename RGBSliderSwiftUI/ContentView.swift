@@ -16,14 +16,16 @@ struct ContentView: View {
     @State var greenInputValue = ""
     @State var blueInputValue = ""
     
+    @State var isPresented = false
+    
     var body: some View {
         VStack(spacing: 20) {
             ColorView(color: Color(red: redSliderValue/255, green: greenSliderValue/255, blue: blueSliderValue/255))
                 .padding(.bottom, 40)
             
-            ColorSliderView(color: .red, sliderValue: $redSliderValue, inputValue: $redInputValue)
-            ColorSliderView(color: .green, sliderValue: $greenSliderValue, inputValue: $greenInputValue)
-            ColorSliderView(color: .blue, sliderValue: $blueSliderValue, inputValue: $blueInputValue)
+            ColorSliderView(color: .red, sliderValue: $redSliderValue, inputValue: $redInputValue, isPresented: $isPresented)
+            ColorSliderView(color: .green, sliderValue: $greenSliderValue, inputValue: $greenInputValue, isPresented: $isPresented)
+            ColorSliderView(color: .blue, sliderValue: $blueSliderValue, inputValue: $blueInputValue, isPresented: $isPresented)
             
             Spacer()
             
@@ -32,6 +34,9 @@ struct ContentView: View {
         .background(Color(red: 1/255, green: 107/255, blue: 193/255))
         .onTapGesture {
             hideKeyboard()
+        }
+        .alert("Wrong format", isPresented: $isPresented, actions: {}) {
+            Text("Enter number from 0 to 255")
         }
     }
     

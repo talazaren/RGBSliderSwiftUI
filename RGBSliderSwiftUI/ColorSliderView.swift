@@ -12,6 +12,7 @@ struct ColorSliderView: View {
     
     @Binding var sliderValue: Double
     @Binding var inputValue: String
+    @Binding var isPresented: Bool
     
     @FocusState var isFocused: Bool
     
@@ -28,24 +29,31 @@ struct ColorSliderView: View {
                 .textFieldStyle(.roundedBorder)
                 .multilineTextAlignment(.trailing)
                 .onChange(of: inputValue) { _, newValue in
-                    if let value = Double(newValue) {
+                    if let value = Double(newValue), value < 255 {
                         sliderValue = value
                     }
                 }
                 .keyboardType(.numberPad)
                 .focused($isFocused)
                 .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button("Done") {
-                            isFocused = false
+                    if isFocused {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            Spacer()
+                            Button("Done") {
+                                if let value = Double(inputValue), value > 255 {
+                                    inputValue = ""
+                                    isPresented.toggle()
+                                }
+                                
+                                isFocused = false
+                            }
                         }
                     }
-                }
+                } 
         }
     }
 }
 
 #Preview {
-    ColorSliderView(color: .red, sliderValue: .constant(100.0), inputValue: .constant("100"))
+    ColorSliderView(color: .red, sliderValue: .constant(100.0), inputValue: .constant("100"), isPresented: .constant(false))
 }
